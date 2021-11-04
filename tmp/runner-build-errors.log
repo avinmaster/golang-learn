@@ -1,0 +1,5 @@
+# web-apps-lq.com
+.\main.go:19:6: func main must have no arguments and no return values
+.\main.go:19:6: missing function body
+.\main.go:20:36: syntax error: unexpected newline, expecting ]
+.\main.go:21:21: syntax error: unexpected ( after top level declaration
