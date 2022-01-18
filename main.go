@@ -3,22 +3,32 @@ package main
 import (
 	"fmt"
 	"net/http"
+
+	"github.com/gorilla/mux"
 )
 
-func handlerFunc(w http.ResponseWriter, r *http.Request) {
+func home(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "text/html")
-	if r.URL.Path == "/" {
-		fmt.Fprint(w, "<h1>Welcome to my awesome site!</h1>")
-	} else if r.URL.Path == "/contact" || r.URL.Path == "/contact/" {
-		fmt.Fprint(w, "<a href=\"mailto:support@test.com\">support@test.com</a>")
-	} else {
-		fmt.Fprint(w, "<h1>404!</h1>")
-	}
+	fmt.Fprint(w, "<h1>Welcome to my awesome site!</h1>")
+}
+
+func contact(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "text/html")
+	fmt.Fprint(w, "<a href=\"mailto:support@test.com\">support@test.com</a>")
+}
+
+func notFound(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "text/html")
+	fmt.Fprint(w, "<h1>Sorry, but we couldn't find the page you were looking for.</h1>")
 }
 
 func main() {
-	mux := &http.ServeMux{}
-	mux.HandleFunc("/", handlerFunc)
+	r := mux.NewRouter()
 
-	http.ListenAndServe(":3000", mux)
+	r.NotFoundHandler = http.HandlerFunc(notFound)
+	r.HandleFunc("/", home)
+	r.HandleFunc("/contacts", contact)
+
+	println("Server's port: 3000")
+	http.ListenAndServe("localhost:3000", r)
 }
